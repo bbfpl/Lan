@@ -1,5 +1,5 @@
-from req import Req
+from request import Request
 
 __all__ = [
-    'Req'
+    'Request'
 ]
