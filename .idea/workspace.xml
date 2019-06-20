@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bf8b5c64-d65a-48b2-a5db-f59e42709ca3" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Lan.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Lan.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/filedb.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/filedb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/request.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/request.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -204,7 +201,7 @@
       <option name="presentableId" value="Default" />
       <updated>1560864313870</updated>
       <workItem from="1560926161004" duration="7869000" />
-      <workItem from="1560999434612" duration="4957000" />
+      <workItem from="1560999434612" duration="5213000" />
     </task>
     <servers />
   </component>
