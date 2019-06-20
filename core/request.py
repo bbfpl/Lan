@@ -3,6 +3,7 @@ import requests
 
 
 def _request(api='', method="get", data={}, headers={}, stream=True):
+
     if method == 'get':
         r = requests.get(api, params=data, headers=headers, stream=stream)
     elif method == 'post':

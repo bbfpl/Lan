@@ -35,7 +35,7 @@ class FileDb:
 
     def select(self):
         """
-        查
+        查询
         """
         return self._db().all()
 
