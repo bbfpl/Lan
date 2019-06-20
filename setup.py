@@ -22,6 +22,7 @@ setup(
     entry_points=dict(console_scripts=['lan=core.cli:main']),
     install_requires=[
         'requests',
-        'TinyDB'
+        'TinyDB',
+        'logzero'
     ],
     zip_safe=False)
