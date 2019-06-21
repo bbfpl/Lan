@@ -6,14 +6,14 @@ def root():
     """
     获取根目录
     """
-    return os.path.dirname(os.path.dirname(__file__))
+    return os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 
 def is_empty(val):
     """
     判断是否为空
     """
-    if val is None or val is '' or val is 'null':
+    if val == None or val == '' or val == 'null':
         return True
     else:
         return False
