@@ -18,11 +18,13 @@ setup(
     author_email='bobofpl@gmail.com',
     url='https://github.com/bbfpl/Lan',
     license='MIT',
-    packages=['core', 'core.commands'],
-    entry_points=dict(console_scripts=['lan=core.cli:main']),
+    packages=['lan', 'lan.commands', 'lan.commands.tpl'],
+    entry_points=dict(console_scripts=['lan=lan.cli:main']),
     install_requires=[
         'requests',
         'TinyDB',
-        'logzero'
+        'logzero',
+        'jinja2',
+        'locust'
     ],
     zip_safe=False)

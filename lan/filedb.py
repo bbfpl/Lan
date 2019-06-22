@@ -1,6 +1,6 @@
-# coding=utf-8
+
 from tinydb import TinyDB
-from utils import root, remove_file
+from .utils import Utils
 
 
 class FileDb:
@@ -8,11 +8,14 @@ class FileDb:
     Json文件db
     """
 
-    def __init__(self, dir='db', name=''):
+    def __init__(self, path='', name=''):
+        if Utils.empty(path):
+            print('请输入保存路径')
+            return False
         """
         初始化 获取db文件路径
         """
-        self.db_path = root() + '/runtime/' + dir + '/' + name + '.json'
+        self.db_path = path + '/' + name + '.json'
 
     def _db(self):
         """
@@ -43,7 +46,7 @@ class FileDb:
         """
         删除
         """
-        remove_file(self.db_path)
+        Utils.remove_file(self.db_path)
 
 
 if __name__ == '__main__':
