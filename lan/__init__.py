@@ -3,11 +3,21 @@ from .filedb import FileDb
 from .utils import Utils
 from .config import Config
 from .log import Log
+# from .locusts import HttpLocust, TaskSet, task
 
 __all__ = [
-    'Request',
-    'FileDb',
+    # 工具类
     'Utils',
+    # 请求类
+    'Request',
+    # json文件储存类
+    'FileDb',
+    # 配置文件类
     'Config',
-    'Log'
+    # 日志类
+    'Log',
+    # 压测类
+    # 'HttpLocust',
+    # 'TaskSet',
+    # 'task',
 ]

@@ -6,7 +6,7 @@ from lan.log import Log
 
 
 class Config:
-    def __init__(self, path='./', name='config', section='Config'):
+    def __init__(self, path='./', name='config', section='CONFIG'):
         # 获取根目录下config.ini
         self.config_path = os.path.join(path, name + '.ini')
         # 读取配置文件
@@ -17,7 +17,7 @@ class Config:
         # 判断是否有ini文件 没有就创建
         if os.path.exists(self.config_path) is False:
             self.config.add_section(section)
-            Log.debug('创建 ' + name + '.ini')
+            Log.debug('创建' + name + '.ini')
 
     def get(self, name=''):
         """

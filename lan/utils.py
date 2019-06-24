@@ -1,8 +1,17 @@
-
 import os
+import datetime
 
 
 class Utils(object):
+    @staticmethod
+    def time_ymd():
+        """
+        获取年月日
+        """
+        y = datetime.datetime.now().year
+        m = datetime.datetime.now().month
+        d = datetime.datetime.now().day
+        return y + m + d
 
     @staticmethod
     def empty(val):

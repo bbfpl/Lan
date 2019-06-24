@@ -4,13 +4,13 @@ from lan.utils import Utils
 
 
 class Log(object):
-    def __init__(self, path='', name='log'):
+    def __init__(self, path='./log/', name='log', logfile=False):
         if Utils.empty(path):
             print('请输入保存路径')
             return False
         # 配置文件 是否生成log文件
-        if True:
-            logzero.logfile(path + "/" + name + ".log", maxBytes=1e6, backupCount=1)
+        if logfile:
+            logzero.logfile(path + "/" + Utils.time_ymd() + "_" + name + ".log", maxBytes=1e6, backupCount=1)
 
     @staticmethod
     def info(content):
