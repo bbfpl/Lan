@@ -24,6 +24,8 @@ setup(
         'requests',
         'TinyDB',
         'logzero',
-        'jinja2'
+        'jinja2',
+        'flask',
+        # 'locust'
     ],
     zip_safe=False)

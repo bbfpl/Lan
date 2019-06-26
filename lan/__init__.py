@@ -4,6 +4,7 @@ from .utils import Utils
 from .config import Config
 from .log import Log
 # from .locusts import HttpLocust, TaskSet, task
+from .monitor import Monitor
 
 __all__ = [
     # 工具类
@@ -20,4 +21,5 @@ __all__ = [
     # 'HttpLocust',
     # 'TaskSet',
     # 'task',
+    'Monitor'
 ]
