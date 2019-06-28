@@ -2,7 +2,7 @@
 import argparse
 from lan.commands.it import it
 from lan.commands.st import st
-from lan.commands.monitor import monitor
+from lan.commands.sm import sm
 
 def main():
     parser = argparse.ArgumentParser(prog='lan', description="Lan(懒)是一套Python测试套件")
@@ -16,7 +16,7 @@ def main():
     parser_st.add_argument('name', help='- 请输入项目名称')
     parser_st.set_defaults(func=st)
 
-    parser_st = subparsers.add_parser('monitor', help='- 服务器监控')
+    parser_st = subparsers.add_parser('sm', help='- 服务器监控')
     parser_st.set_defaults(func=monitor)
 
     args = parser.parse_args()
