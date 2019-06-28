@@ -11,7 +11,7 @@ class Utils(object):
         y = datetime.datetime.now().year
         m = datetime.datetime.now().month
         d = datetime.datetime.now().day
-        return y + m + d
+        return y + '' + m + '' + d
 
     @staticmethod
     def empty(val):

@@ -1,5 +1,6 @@
 # 统一引用lan里的TaskSet和task
-from lan import Log, TaskSet, task
+from locust import TaskSet, task
+from lan import Log
 
 # 初始化Log logfile=true 生成log文件
 log = Log(logfile=True)

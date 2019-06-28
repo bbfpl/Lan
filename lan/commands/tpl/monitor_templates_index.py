@@ -270,11 +270,6 @@ html = '''
 </div>
 
 <div class="container content">
-    <div id="loading-notice">
-        <div class="progress progress-striped center-block active">
-            <div class="progress-bar progress-bar-warning" style="width: 100%;">加载中...</div>
-        </div>
-    </div>
     <table class="table table-striped table-condensed table-hover">
         <thead>
         <tr>
@@ -290,24 +285,79 @@ html = '''
         </tbody>
     </table>
     <br/>
-    <div id="updated" style="margin-left: 5px;">更新中...</div>
 </div>
+
+<script src="https://unpkg.com/art-template@4.13.2/lib/template-web.js"></script>
+<script id="tpl-data" type="text/html">
+    <tr data-toggle='collapse' class='accordion-toggle'>
+        <td id="uptime">${uptime}</td>
+        <td id="load">${load}</td>
+        <td id="cpu">
+            <div class="progress progress-striped active">
+                <div style="width: ${cpu}%;" class="progress-bar progress-bar-warning"><small>${cpu}%</small></div>
+            </div>
+        </td>
+        <td id="memory">
+            <div class="progress progress-striped active">
+                <div style="width: ${memory_used/memory_total*100}%;" class="progress-bar progress-bar-warning">
+                    <small>${memory_used}/${memory_total}MB</small></div>
+            </div>
+        </td>
+        <td id="hdd">
+            <div class="progress progress-striped active">
+                <div style="width: ${hdd_used/hdd_total*100}%;" class="progress-bar progress-bar-warning">
+                    <small>${hdd_used}/${hdd_total}G</small></div>
+            </div>
+        </td>
+    </tr>
+</script>
+
 
 <script>
     $(function () {
-        //let _port = {{ port }};
-        // console.log(_port);
-        $.ajax({
-            type : "get",
-            url : "/get_data",
-            success : function(result) {
-                console.log(result);
-            },
-            error : function(e){
-                console.log(e.status);
-                console.log(e.responseText);
+        template.defaults.rules.push({
+            test: /\${([\w\W]*?)}/,
+            use: function (match, code) {
+                return {
+                    code: code,
+                    output: 'escape'
+                }
             }
         });
+
+        let main = {
+            init: function () {
+                setInterval(()=>{
+                    main.get();
+                },3000);
+            },
+            get: function () {
+                $.ajax({
+                    type: "get",
+                    url: "/get_data",
+                    success: function (result) {
+                        result = JSON.parse(result);
+                        console.log(result);
+                        let html = template('tpl-data', {
+                            uptime: result.uptime,
+                            load: result.uptime,
+                            cpu: result.cpu,
+                            memory_used: parseInt(result.memory_used / 1000),
+                            memory_total: parseInt(result.memory_total / 1000),
+                            hdd_total: parseInt(result.hdd_total / 1000),
+                            hdd_used: parseInt(result.hdd_used / 1000),
+                        });
+                        $('#servers').html(html);
+                    },
+                    error: function (e) {
+                        console.log(e.status);
+                        console.log(e.responseText);
+                    }
+                });
+            }
+        }
+
+        main.init();
     })
 
 </script>
