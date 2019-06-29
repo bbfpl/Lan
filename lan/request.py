@@ -1,13 +1,15 @@
-
 import requests
 
 
 def _request(api='', method="get", data={}, headers={}, stream=True):
-
     if method == 'get':
         r = requests.get(api, params=data, headers=headers, stream=stream)
     elif method == 'post':
         r = requests.post(api, data=data, headers=headers, stream=stream)
+    elif method == 'put':
+        r = requests.put(api, data=data, headers=headers, stream=stream)
+    elif method == 'delete':
+        r = requests.delete(api, headers=headers, stream=stream)
     else:
         print('没有找到')
 
@@ -47,6 +49,14 @@ class Request:
     @staticmethod
     def post(api='', data={}, headers={}, stream=True):
         return _request(api, 'post', data, headers, stream)
+
+    @staticmethod
+    def put(api='', data={}, headers={}, stream=True):
+        return _request(api, 'put', data, headers, stream)
+
+    @staticmethod
+    def delete(api='', headers={}, stream=True):
+        return _request(api, 'delete', {}, headers, stream)
 
 
 if __name__ == '__main__':
