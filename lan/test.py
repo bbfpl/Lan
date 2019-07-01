@@ -1,4 +1,4 @@
-class Test():
+class Test(object):
     @staticmethod
     def get_discover_cases(discover):
         """
@@ -21,3 +21,4 @@ class Test():
         获取方法名
         """
         return str(item[0]).split(' (')[0]
+

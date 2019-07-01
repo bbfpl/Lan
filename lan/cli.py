@@ -17,7 +17,7 @@ def main():
     parser_st.set_defaults(func=st)
 
     parser_st = subparsers.add_parser('sm', help='- 服务器监控')
-    parser_st.set_defaults(func=monitor)
+    parser_st.set_defaults(func=sm)
 
     args = parser.parse_args()
     try:

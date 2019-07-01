@@ -26,6 +26,7 @@ setup(
         'logzero',
         'jinja2',
         'flask',
-        # 'locust'
+        'locust',
+        'unittest2'
     ],
     zip_safe=False)

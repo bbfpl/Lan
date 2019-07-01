@@ -10,7 +10,7 @@ class ReporeHtml(object):
         self.start_time = start_time
         self.end_time = end_time
         self.case_data = case_data
-        self.report_html_path = '/runtime/html/report_' + g_get('main') + '.html'
+        self.report_html_path = './temp/report.html'
         Utils.remove_file(self.report_html_path)
 
     # 根据类型获取用例的数量和用例
@@ -46,7 +46,7 @@ class ReporeHtml(object):
                 obj['num'] = data['skipped_case_sum']
                 obj['bg'] = '#0099CC'
             new_data.append(obj)
-        return Template(Utils.open_file(os.path.dirname(__file__) + '/reportTpl/nav.html')).render(datas=new_data)
+        return Template(Utils.open_file(os.path.dirname(__file__) + '/tpl/nav.html')).render(datas=new_data)
 
     # 获取所有用例内容列表
     def __get_cases_content_html(self, data):
@@ -58,12 +58,12 @@ class ReporeHtml(object):
                 'text': v
             }
             new_titles.append(obj)
-        return Template(Utils.open_file(os.path.dirname(__file__) + '/reportTpl/content.html')).render(datas=data,
-                                                                                                       titles=new_titles)
+        return Template(Utils.open_file(os.path.dirname(__file__) + '/tpl/content.html')).render(datas=data,
+                                                                                                 titles=new_titles)
 
     # 获取统计图
     def __get_cases_chart_html(self, data):
-        return Template(Utils.open_file(os.path.dirname(__file__) + '/reportTpl/chart.html')).render(data)
+        return Template(Utils.open_file(os.path.dirname(__file__) + '/tpl/chart.html')).render(data)
 
     # 获取 输出字段数据 模板可使用的字段
     def get_output_field_data(self):
@@ -99,7 +99,7 @@ class ReporeHtml(object):
     def build(self):
         get_data = self.get_output_field_data()
         # 获取template路径
-        code_path = os.path.dirname(__file__) + '/reportTpl/template.html'
+        code_path = os.path.dirname(__file__) + '/tpl/template.html'
         # 基础模板文件
         template_html = Utils.open_file(code_path)
         html = Template(template_html).render(get_data)

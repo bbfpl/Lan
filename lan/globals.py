@@ -2,14 +2,24 @@ global _global_dict
 _global_dict = {}
 
 
-# 设置全局变量
-def set(key, val):
-    _global_dict[key] = val
+class Globals(object):
+    """
+    全局变量模块
+    """
 
+    @staticmethod
+    def set(key, val):
+        """
+        设置全局变量
+        """
+        _global_dict[key] = val
 
-# 获取全局变量
-def get(key):
-    try:
-        return _global_dict[key]
-    except KeyError:
-        return ""
+    @staticmethod
+    def get(key):
+        """
+        获取全局变量
+        """
+        try:
+            return _global_dict[key]
+        except KeyError:
+            return ""

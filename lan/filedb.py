@@ -42,7 +42,7 @@ class FileDb:
         """
         return self._db().all()
 
-    def remove_db(self):
+    def remove(self):
         """
         删除
         """

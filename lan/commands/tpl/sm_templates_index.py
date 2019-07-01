@@ -1,4 +1,4 @@
-html = '''
+content = '''
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -367,7 +367,7 @@ html = '''
 
 
 def get_html():
-    return html
+    return content
 
 
 if __name__ == '__main__':

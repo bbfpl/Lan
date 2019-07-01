@@ -1,22 +1,31 @@
 # coding=utf-8
-from unittest2 import suite, TextTestRunner
 import time
-from lan.test import Test
-from lan.filedb import FileDb
-from lan.test_loader import TestLoader
-from lan.test_report_html import ReporeHtml
+from unittest2 import suite, TextTestRunner
+from lan import Test, FileDb, Config, Globals, Log, TestLoader
 
 
-# 定义 Testrunner 类
-class Testrunner(object):
+# 定义 TestRunner 类
+class TestRunner(object):
     def __init__(self):
+        # 所有结果
+        self.db_all = FileDb('./temp', 'all')
+        # 已完成
+        self.db_complete = FileDb('./temp', 'complete')
+
         self.all_result = []
+
+    # 先处理一下db文件
+    def __db_clean(self):
+        self.db_all.remove()
+        # 中断后开始是否继续开始
+        if Config.get("interruptContinue") == "False":
+            self.db_complete.remove()
 
     # 获取未执行的用例
     def __get_case_incomplete(self, method_names):
         all = []
         # 获取db已经完成的用例
-        complete = FileDb('temp', 'complete').select()
+        complete = self.db_complete.select()
         # 先获取所以method_name用于后面对比
         all_c_mn = []
         for item in complete:
@@ -32,18 +41,14 @@ class Testrunner(object):
 
     # 获取所有 discover
     def __get_runner_discover(self):
-        # 读取config interruptContinue:中断后开始是否继续开始
-        is_interrupt_continue = Config.get_config('interruptContinue')
-        # 项目路径
-        project_path = Tool.get_project_dir()
 
         # 重写TestLoader 用于后期队列及报错连续执行
-        discover = TestLoader().discover(project_path, pattern='*_st.py', top_level_dir=None)
+        discover = TestLoader().discover('apis', pattern='*_st.py', top_level_dir=None)
         # 获取所有用例和方法名
         method_names = Test.get_discover_cases(discover)
 
-        # 中断后开始是否继续开始
-        if is_interrupt_continue == 'True':
+        # 读取config interruptContinue:中断后开始是否继续开始
+        if Config.get('interruptContinue') == 'True':
             # 拿到方法名和结果队列比较
             discover = self.__get_case_incomplete(method_names)
         return discover, method_names
@@ -58,16 +63,12 @@ class Testrunner(object):
     # 第一步获取 result
     def __get_runner_result(self):
         discover, method_names = self.__get_runner_discover()
-        # print('进入线程')
-        # work_manager = WorkManager(thread_num=10)
+
         for i in discover:
             self.__runner_run(i)
-            # work_manager.add_job(self.__runner_run(i), '')
-        # work_manager.wait_allcomplete()
-        # print('出来线程')
 
-        FileDb().inster_all(g_get('db_all_insters'))
-        FileDb('temp', 'complete').inster_all(g_get('db_complete_insters'))
+        self.db_all.inster_all(Globals.get('db_all_insters'))
+        self.db_complete.inster_all(Globals.get('db_complete_insters'))
 
         return {
             'method_names': method_names,
@@ -76,7 +77,7 @@ class Testrunner(object):
 
     # 第二步获取用例返回的各种数据
     def __get_case_return_data(self, method_names, results):
-        db = DB().select()
+        db = self.db_all.select()
         all_data = []
         # 遍历所有用例方法
         for name in method_names:
@@ -118,39 +119,36 @@ class Testrunner(object):
         return all_data
 
     # 第三步生成报告
-    def __build_report(self, start_time, end_time, case_data):
-        ReporeHtml(start_time, end_time, case_data).build()
+    # def __build_report(self, start_time, end_time, case_data):
+    #     ReporeHtml(start_time, end_time, case_data).build()
 
-    # 先处理一下db文件
-    def __db_clean(self):
-        DB().remove_db()
-        # 中断后开始是否继续开始
-        is_interrupt_continue = Config.get_config('interruptContinue')
-        if is_interrupt_continue == 'False':
-            DB('temp', 'complete').remove_db()
-
-    def run(self, main):
+    # 入口
+    def run(self):
         # 先设置一下全局项目名称
-        g_set('main', main)
-        g_set('db_all_insters', [])
-        g_set('db_complete_insters', [])
-        # 清除db
+        Globals.set('db_all_insters', [])  # 所有
+        Globals.set('db_complete_insters', [])  # 已经完成的
+
+        # 每次进入时清除db
         self.__db_clean()
-        # 开始时间
+
+        # 获取开始时间
         start_time = time.time()
+
         # 执行所有用例
         get_result = self.__get_runner_result()
 
         # 结束时间
         end_time = time.time()
 
-        # # 获取用例返回的各种数据
+        # 获取用例返回的各种数据
         get_case_data = self.__get_case_return_data(get_result['method_names'], get_result['result'])
-        # # 生成报告
-        self.__build_report(start_time, end_time, get_case_data)
-        print('------------------------')
-        print(end_time - start_time)
+
+        # 生成报告
+        # self.__build_report(start_time, end_time, get_case_data)
+        Log.debug(get_case_data)
+        Log.debug('------------------------')
+        Log.debug(end_time - start_time)
 
 
 if __name__ == '__main__':
-    Testrunner().run('Demo')
+    TestRunner.run()
