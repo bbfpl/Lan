@@ -117,4 +117,4 @@ Request.delete(api,headers,stream)
 
 
 # 学习怎么开发框架
-[开始学习](https://github.com/bbfpl/Lan/doc/0.md "开始学习")
+[开始学习](https://github.com/bbfpl/Lan/blob/master/doc/0.md "开始学习")
