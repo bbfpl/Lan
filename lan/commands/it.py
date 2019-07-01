@@ -105,6 +105,19 @@ def _fun_write_model_tpl_template(path):
     Utils.write_file(path + '/template.html', template.render())
 
 
+# apis/login_st.py
+def _fun_write_apis_login(path):
+    Log.debug('创建apis/login_st.py文件')
+    # 获取路径
+    code_path = os.path.dirname(__file__) + '/tpl/it_apis_login_st.py'
+    # 基础模板文件
+    code = Utils.open_file(code_path)
+    # 模板编译
+    template = Template(code)
+    # 写入内容
+    Utils.write_file(path + '/login_st.py', template.render())
+
+
 def it(args=None):
     if None is args:
         Log.error('没有name参数')
@@ -122,7 +135,8 @@ def it(args=None):
     Utils.mkdir(path_model_tpl)
 
     Log.debug('创建接口管理目录:apis')
-    Utils.mkdir(path + '/apis')
+    path_apis = path + '/apis'
+    Utils.mkdir(path_apis)
 
     Log.debug('创建缓存目录:temp')
     Utils.mkdir(path + '/temp')
@@ -147,6 +161,9 @@ def it(args=None):
     _fun_write_model_tpl_content(path_model_tpl)
     _fun_write_model_tpl_nav(path_model_tpl)
     _fun_write_model_tpl_template(path_model_tpl)
+
+    # 创建login_st.py
+    _fun_write_apis_login(path_apis)
 
 
 if __name__ == '__main__':

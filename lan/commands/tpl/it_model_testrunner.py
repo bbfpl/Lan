@@ -1,7 +1,7 @@
 # coding=utf-8
 import time
 from unittest2 import suite, TextTestRunner
-from lan import Test, FileDb, Config, Globals, Log, TestLoader
+from lan import FileDb, Config, Globals, Log, TestLoader
 
 
 # 定义 TestRunner 类
@@ -39,13 +39,36 @@ class TestRunner(object):
 
         return all
 
+    @staticmethod
+    def get_discover_cases(discover):
+        """
+        获取discover里的所以用例 方法名称
+        """
+        data = []
+        for item in discover:
+            for i in str(item).split('testMethod='):
+                for j in i.split('>'):
+                    if 'test_' in j:
+                        data.append({
+                            'method_name': j,
+                            'case': item
+                        })
+        return data
+
+    @staticmethod
+    def get_result_name(self, item):
+        """
+        获取方法名
+        """
+        return str(item[0]).split(' (')[0]
+
     # 获取所有 discover
     def __get_runner_discover(self):
 
         # 重写TestLoader 用于后期队列及报错连续执行
         discover = TestLoader().discover('apis', pattern='*_st.py', top_level_dir=None)
         # 获取所有用例和方法名
-        method_names = Test.get_discover_cases(discover)
+        method_names = self.get_discover_cases(discover)
 
         # 读取config interruptContinue:中断后开始是否继续开始
         if Config.get('interruptContinue') == 'True':
@@ -102,17 +125,17 @@ class TestRunner(object):
 
                 # 获取跳过的
                 for item in result.skipped:
-                    if name['method_name'] in Test.get_result_name(item):
+                    if name['method_name'] in self.get_result_name(item):
                         info['status_type'] = 'skipped'
 
                 # 获取失败的
                 for item in result.failures:
-                    if name['method_name'] in Test.get_result_name(item):
+                    if name['method_name'] in self.get_result_name(item):
                         info['status_type'] = 'error'  # failures
 
                 # 获取错误的
                 for item in result.errors:
-                    if name['method_name'] in Test.get_result_name(item):
+                    if name['method_name'] in self.get_result_name(item):
                         info['status_type'] = 'error'
 
             all_data.append(info)
