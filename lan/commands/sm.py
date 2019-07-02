@@ -4,6 +4,7 @@ from lan.log import Log
 from lan.config import Config
 from lan.utils import Utils
 from lan.commands.tpl.sm_templates_index import get_html
+from lan.commands.pub import tpl
 
 
 def _fun_config(path):
@@ -16,15 +17,7 @@ def _fun_config(path):
 
 
 def _fun_write_run(path):
-    Log.debug('创建run.py文件')
-    # 获取auth.py路径
-    code_path = os.path.dirname(__file__) + '/tpl/sm_run.py'
-    # 基础模板文件
-    code = Utils.open_file(code_path)
-    # 模板编译
-    template = Template(code)
-    # 写入内容
-    Utils.write_file(path + '/run.py', template.render())
+    tpl('/tpl/sm_run.py', path + '/run.py')
 
 
 def _fun_write_index_html(path):

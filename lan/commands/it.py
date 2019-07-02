@@ -3,7 +3,7 @@ from jinja2 import Template
 from lan.log import Log
 from lan.config import Config
 from lan.utils import Utils
-from lan.commands.pub import mkdir
+from lan.commands.pub import mkdir, tpl, init_file
 from lan.commands.tpl.it_config_yaml import get_yaml_tpl
 
 from lan.commands.tpl.it_model_tpl_chart import get_chart_tpl
@@ -28,45 +28,6 @@ def _fun_config_yaml(path):
     template = Template(get_yaml_tpl())
     # 写入内容
     Utils.write_file(path + '/config.yaml', template.render())
-
-
-# run.py
-def _fun_write_run(path):
-    Log.debug('生成 run.py')
-    # 获取auth.py路径
-    code_path = os.path.dirname(__file__) + '/tpl/it_run.py'
-    # 基础模板文件
-    code = Utils.open_file(code_path)
-    # 模板编译
-    template = Template(code)
-    # 写入内容
-    Utils.write_file(path + '/run.py', template.render())
-
-
-# model/testrunner.py
-def _fun_write_model_testrunner(path):
-    Log.debug('创建model/testrunner.py文件')
-    # 获取路径
-    code_path = os.path.dirname(__file__) + '/tpl/it_model_testrunner.py'
-    # 基础模板文件
-    code = Utils.open_file(code_path)
-    # 模板编译
-    template = Template(code)
-    # 写入内容
-    Utils.write_file(path + '/testrunner.py', template.render())
-
-
-# model/report.py
-def _fun_write_model_report(path):
-    Log.debug('创建model/report.py文件')
-    # 获取路径
-    code_path = os.path.dirname(__file__) + '/tpl/it_model_report.py'
-    # 基础模板文件
-    code = Utils.open_file(code_path)
-    # 模板编译
-    template = Template(code)
-    # 写入内容
-    Utils.write_file(path + '/report.py', template.render())
 
 
 # model/tpl/chart.html
@@ -105,41 +66,32 @@ def _fun_write_model_tpl_template(path):
     Utils.write_file(path + '/template.html', template.render())
 
 
-# apis/login_st.py
-def _fun_write_apis_login(path):
-    Log.debug('创建apis/login_st.py文件')
-    # 获取路径
-    code_path = os.path.dirname(__file__) + '/tpl/it_apis_login_st.py'
-    # 基础模板文件
-    code = Utils.open_file(code_path)
-    # 模板编译
-    template = Template(code)
-    # 写入内容
-    Utils.write_file(path + '/login_st.py', template.render())
-
-
 def it(args=None):
     if None is args:
         Log.error('没有name参数')
         return False
 
     # 创建It目录
-    path = mkdir('IT', args.name)
+    root_path = mkdir(os.getcwd() + '/IT')
+    path = mkdir(root_path + '/' + args.name)
+
+    # path = mkdir(root_path + '/uihtml')
 
     path_model = path + '/model'
-    Log.debug('创建功能模块目录:model')
-    Utils.mkdir(path_model)
+    mkdir(path_model)
+    tpl('/tpl/it_model_init.py', path_model + '/__init__.py')
 
-    Log.debug('创建tpl目录:tpl')
     path_model_tpl = path + '/model/tpl'
-    Utils.mkdir(path_model_tpl)
+    mkdir(path_model_tpl)
 
-    Log.debug('创建接口管理目录:apis')
     path_apis = path + '/apis'
-    Utils.mkdir(path_apis)
+    mkdir(path_apis)
 
-    Log.debug('创建缓存目录:temp')
-    Utils.mkdir(path + '/temp')
+    path_apis_user = path_apis + '/user'
+    mkdir(path_apis_user)
+    init_file(path_apis_user)  # 创建空__init__.py
+
+    mkdir(path + '/temp')
 
     # 创建ini配置文件
     _fun_config_ini(path)
@@ -148,13 +100,16 @@ def it(args=None):
     _fun_config_yaml(path)
 
     # 创建入口文件
-    _fun_write_run(path)
+    tpl('/tpl/it_run.py', path + '/run.py')
 
     # 创建testrunner.py
-    _fun_write_model_testrunner(path_model)
+    tpl('/tpl/it_model_testrunner.py', path_model + '/testrunner.py')
 
     # 创建report.py
-    _fun_write_model_report(path_model)
+    tpl('/tpl/it_model_report.py', path_model + '/report.py')
+
+    # 创建test.py
+    tpl('/tpl/it_model_test.py', path_model + '/test.py')
 
     # 创建html模板
     _fun_write_model_tpl_chart(path_model_tpl)
@@ -163,7 +118,7 @@ def it(args=None):
     _fun_write_model_tpl_template(path_model_tpl)
 
     # 创建login_st.py
-    _fun_write_apis_login(path_apis)
+    tpl('/tpl/it_apis_login_st.py', path_apis_user + '/login_st.py')
 
 
 if __name__ == '__main__':

@@ -1,12 +1,17 @@
-import os, unittest, warnings
+import os, unittest2, warnings
 
-from .utils import Utils
-from .config import Config
-from .globals import Globals
-from .request import Request
+from lan import Utils, Config, FileDb
 
-class Test(unittest.TestCase):
+
+class Test(unittest2.TestCase):
     result = {}
+    # 获取项目目录
+    project_path = os.path.dirname(os.path.dirname(__file__))
+
+    # 所有结果
+    _db_all = FileDb(project_path + '/temp', 'all')
+    # 已完成
+    _db_complete = FileDb(project_path + '/temp', 'complete')
 
     # 获取info
     def _getTestInfo(self):
@@ -38,8 +43,8 @@ class Test(unittest.TestCase):
         # 获取当前用例class名 方法名 等
         get_test_info = self._getTestInfo()
         # 全局data 用例里可用
-        now_data_model = Utils.get_yaml(get_test_info['now_data_model'])
-        data = Utils.get_yaml(get_test_info['now_data_fun'])
+        now_data_model = Utils.get_yaml(get_test_info['now_data_model'], self.project_path)
+        data = Utils.get_yaml(get_test_info['now_data_fun'], self.project_path)
 
         # 模块公共属性 比如 url mode等
         if 'url' in now_data_model:
@@ -59,7 +64,7 @@ class Test(unittest.TestCase):
                 _url = pub_url  # 给url添加域名
             else:
                 _url = data['url']  # 给url添加域名
-            data['url'] = Utils.get_yaml('project.config.domain') + _url
+            data['url'] = Utils.get_yaml('project.config.domain', self.project_path) + _url
 
             if 'mode' not in data:
                 data['mode'] = pub_mode
@@ -86,32 +91,20 @@ class Test(unittest.TestCase):
         # 保存到db
         if self.result:
             get_test_info = self._getTestInfo()
-            db_all_insters = Globals.get('db_all_insters')
-            db_all_insters.append({
+
+            self._db_all.inster({
                 'method_name': get_test_info['method_name'],
-                'data': self.data,  #
+                'data': self.data,
                 'result': self.result  # 返回提交的data的json
             })
-            Globals.set('db_all_insters', db_all_insters)
-            # DB().inster({
-            #     'method_name': get_test_info['method_name'],
-            #     'data': self.data,#
-            #     'result': self.result #返回提交的data的json
-            # })
 
-            is_interrupt_continue = Config.get('interruptContinue')
+            is_interrupt_continue = Config(self.project_path).get('interruptContinue')
             if is_interrupt_continue == 'True':
                 # 保存到 结果队列
-                db_complete_insters = Globals.get('db_complete_insters')
-                db_complete_insters.append({
+                self._db_complete.inster({
                     'status': 1,
                     'method_name': get_test_info['method_name']
                 })
-                Globals.set('db_complete_insters', db_complete_insters)
-                # DB('temp','complete').inster({
-                #     'status': 1,
-                #     'method_name': get_test_info['method_name']
-                # })
 
     # 必须使用@classmethod装饰器,所有test运行完后运行一次
     @classmethod

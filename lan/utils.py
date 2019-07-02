@@ -93,7 +93,7 @@ class Utils(object):
         warnings.simplefilter("ignore", DeprecationWarning)
 
         # 每个项目下面有个config.yaml
-        config_path = path + 'config.yaml'
+        config_path = path + '/config.yaml'
         # yaml的读取
         f = open(config_path, encoding='utf-8')
         data = yaml.load(f)
