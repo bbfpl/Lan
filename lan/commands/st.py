@@ -1,10 +1,7 @@
 # -*- coding: UTF-8 -*-
-import os
-from jinja2 import Template
-from lan.log import Log
 from lan.config import Config
 from lan.utils import Utils
-from lan.commands.pub import mkdir, tpl
+from lan.commands.pub import mkdir, tpl, init_file
 
 
 def _fun_config(path):
@@ -43,8 +40,11 @@ def st(args=None):
 
     # 创建ST目录
     root_path = mkdir('ST')
-    # st_path = mkdir(root_path + '/' + args.name)
-    st_path = mkdir(root_path + '/demo')
+    st_path = mkdir(root_path + '/' + args.name)
+    # st_path = mkdir(root_path + '/demo')
+
+    init_file(st_path)  # 创建空__init__.py
+
     # 创建ST-log目录
     Utils.mkdir(st_path + '/log')
     # 创建配置文件

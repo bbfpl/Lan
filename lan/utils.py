@@ -14,7 +14,7 @@ class Utils(object):
         y = datetime.datetime.now().year
         m = datetime.datetime.now().month
         d = datetime.datetime.now().day
-        return y + '' + m + '' + d
+        return str(y) + str(m) + str(d)
 
     @staticmethod
     def empty(val):
@@ -96,7 +96,7 @@ class Utils(object):
         config_path = path + '/config.yaml'
         # yaml的读取
         f = open(config_path, encoding='utf-8')
-        data = yaml.load(f)
+        data = yaml.safe_load(f)
         f.close()
         if name != '':
             try:
@@ -108,4 +108,4 @@ class Utils(object):
 
 
 if __name__ == '__main__':
-    print(Utils.empty(1))
+    print(Utils.time_ymd())

@@ -33,37 +33,29 @@ def _fun_config_yaml(path):
 # model/tpl/chart.html
 def _fun_write_model_tpl_chart(path):
     Log.debug('创建model/tpl/chart.html文件')
-    # 模板编译
-    template = Template(get_chart_tpl())
     # 写入内容
-    Utils.write_file(path + '/chart.html', template.render())
+    Utils.write_file(path + '/chart.html', get_chart_tpl())
 
 
 # model/tpl/content.html
 def _fun_write_model_tpl_content(path):
     Log.debug('创建model/tpl/content.html文件')
-    # 模板编译
-    template = Template(get_content_tpl())
     # 写入内容
-    Utils.write_file(path + '/content.html', template.render())
+    Utils.write_file(path + '/content.html', get_content_tpl())
 
 
 # model/tpl/nav.html
 def _fun_write_model_tpl_nav(path):
     Log.debug('创建model/tpl/nav.html文件')
-    # 模板编译
-    template = Template(get_nav_tpl())
     # 写入内容
-    Utils.write_file(path + '/nav.html', template.render())
+    Utils.write_file(path + '/nav.html', get_nav_tpl())
 
 
 # model/tpl/template.html
 def _fun_write_model_tpl_template(path):
     Log.debug('创建model/tpl/template.html文件')
-    # 模板编译
-    template = Template(get_template_tpl())
     # 写入内容
-    Utils.write_file(path + '/template.html', template.render())
+    Utils.write_file(path + '/template.html', get_template_tpl())
 
 
 def it(args=None):

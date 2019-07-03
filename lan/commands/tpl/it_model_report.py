@@ -7,10 +7,12 @@ from lan.utils import Utils
 
 class ReporeHtml(object):
     def __init__(self, start_time, end_time, case_data):
+        # 获取项目目录
+        self.project_path = os.path.dirname(os.path.dirname(__file__))
         self.start_time = start_time
         self.end_time = end_time
         self.case_data = case_data
-        self.report_html_path = './temp/report.html'
+        self.report_html_path = self.project_path + '/temp/report.html'
         Utils.remove_file(self.report_html_path)
 
     # 根据类型获取用例的数量和用例
@@ -29,7 +31,7 @@ class ReporeHtml(object):
 
     # 获取切换菜单html
     def __get_cases_nav_html(self, data):
-        cases = Utils.get_yaml('project.config.repore.cases')
+        cases = Utils.get_yaml('project.config.repore.cases', self.project_path)
         new_data = []
         for k, v in cases.items():
             obj = {'text': v}
@@ -50,7 +52,7 @@ class ReporeHtml(object):
 
     # 获取所有用例内容列表
     def __get_cases_content_html(self, data):
-        table = Utils.get_yaml('project.config.repore.table')
+        table = Utils.get_yaml('project.config.repore.table', self.project_path)
         new_titles = []
         for k, v in table.items():
             obj = {
@@ -67,7 +69,7 @@ class ReporeHtml(object):
 
     # 获取 输出字段数据 模板可使用的字段
     def get_output_field_data(self):
-        title = Utils.get_yaml('project.config.repore.title')
+        title = Utils.get_yaml('project.config.repore.title', self.project_path)
         # 所有
         all_case = self.__get_case_info(self.case_data, 'all')
         # 成功

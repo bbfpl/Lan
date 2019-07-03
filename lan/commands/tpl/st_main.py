@@ -4,7 +4,7 @@ from locust import HttpLocust
 
 from lan import Config
 # 引用task.py里的Tasks类 启动和任务单独分开写
-from .task import Tasks
+from task import Tasks
 
 # 初始化Config
 cf = Config()

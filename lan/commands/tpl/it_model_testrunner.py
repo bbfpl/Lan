@@ -2,7 +2,7 @@
 import time
 from unittest2 import suite, TextTestRunner
 from lan import FileDb, Config, Log, TestLoader, Utils
-
+from model.report import ReporeHtml
 
 # 定义 TestRunner 类
 class TestRunner(object):
@@ -154,8 +154,9 @@ class TestRunner(object):
         return all_data
 
     # 第三步生成报告
-    # def __build_report(self, start_time, end_time, case_data):
-    #     ReporeHtml(start_time, end_time, case_data).build()
+    def __build_report(self, start_time, end_time, case_data):
+        Log.debug("8-生成报告")
+        ReporeHtml(start_time, end_time, case_data).build()
 
     # 入口
     def run(self):
@@ -179,10 +180,9 @@ class TestRunner(object):
         get_case_data = self.__get_case_return_data(get_result['method_names'], get_result['result'])
 
         # 生成报告
-        # self.__build_report(start_time, end_time, get_case_data)
-        Log.debug(get_case_data)
-        Log.debug('------------------------')
-        Log.debug(end_time - start_time)
+        self.__build_report(start_time, end_time, get_case_data)
+
+        Log.debug("9-总共用时" + str(end_time - start_time) + 's')
 
 
 if __name__ == '__main__':
