@@ -19,6 +19,7 @@ def _fun_config_ini(path):
         path=path
     )
     c.set('interruptContinue', 'False')
+    c.set('reportSendMail', 'False')
 
 
 # config.yaml
@@ -59,15 +60,15 @@ def _fun_write_model_tpl_template(path):
 
 
 def it(args=None):
-    if None is args:
-        Log.error('没有name参数')
-        return False
+    # if None is args:
+    #     Log.error('没有name参数')
+    #     return False
 
     # 创建It目录
     root_path = mkdir(os.getcwd() + '/IT')
-    path = mkdir(root_path + '/' + args.name)
+    # path = mkdir(root_path + '/' + args.name)
 
-    # path = mkdir(root_path + '/uihtml')
+    path = mkdir(root_path + '/uihtml')
 
     path_model = path + '/model'
     mkdir(path_model)

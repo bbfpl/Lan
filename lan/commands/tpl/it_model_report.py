@@ -2,7 +2,7 @@
 from jinja2 import Template
 # import webbrowser
 import os
-from lan.utils import Utils
+from lan import Utils,Mail
 
 
 class ReporeHtml(object):

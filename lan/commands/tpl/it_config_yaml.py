@@ -5,6 +5,11 @@ project:
   config:
     # 域名
     domain: http://139.196.192.35:39001
+    # 发送邮箱配置
+    maile_host: null
+    maile_port: null
+    maile_user: null
+    maile_passwd: null
     # 响应处理-可为空 如果为空就不判断响应后的字段
     response:
       # 状态字段 一般是code 或者 status
@@ -36,11 +41,11 @@ project:
     user:
       # 登录 login_st.py
       login:
-        className: TestUserLogin  # 接口类名
+        className: TestUserLogin # 接口类名
         funName:
           # 接口方法名
           test_login:
-            name: 登录  # 接口注释
+            name: 登录 # 接口注释
             url: /api/login
             # 请求类型
             mode: post
@@ -50,21 +55,21 @@ project:
               password: 123
       # 获取所有用户 users_st.py
       users:
-        className: TestUsers  # 接口类名
+        className: TestUsers # 接口类名
         funName:
           # 接口方法名
           test_get_users:
-            name: 登录  # 接口注释
+            name: 登录 # 接口注释
             url: /api/get_users
             # 请求类型
             mode: get
       # 获取用户 user_st.py
       user:
-        className: TestUser  # 接口类名
+        className: TestUser # 接口类名
         funName:
           # 接口方法名
           test_get_user:
-            name: 登录  # 接口注释
+            name: 登录 # 接口注释
             url: /api/get_user
             # 请求类型
             mode: get
