@@ -1,5 +1,4 @@
-
-from tinydb import TinyDB
+from tinydb import TinyDB, where
 from .utils import Utils
 
 
@@ -38,9 +37,15 @@ class FileDb:
 
     def select(self):
         """
-        查询
+        查询所有
         """
         return self._db().all()
+
+    def find(self, key="", val=""):
+        """
+        查询单条
+        """
+        return self._db().get(where(key) == val)
 
     def remove(self):
         """

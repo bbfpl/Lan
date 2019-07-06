@@ -1,12 +1,14 @@
 import os, unittest2, warnings
 
-from lan import Utils, Config, FileDb
+from lan import FileDb, Log, Yaml
 
 
 class Test(unittest2.TestCase):
     result = {}
     # 获取项目目录
     project_path = os.path.dirname(os.path.dirname(__file__))
+    yaml_config = Yaml(project_path + '/config', 'config')
+    yaml_apis = Yaml(project_path + '/config', 'apis')
 
     # 所有结果
     _db_all = FileDb(project_path + '/temp', 'all')
@@ -27,9 +29,9 @@ class Test(unittest2.TestCase):
 
         # 暂时想到这种解决方法 等以后再来优化这块
         if file_name.find('.') >= 0:
-            now_data = 'project.models.' + file_name
+            now_data = 'apis.' + file_name
         else:
-            now_data = 'project.models.' + file_path + '.' + file_name
+            now_data = 'apis.' + file_path + '.' + file_name
         return {
             # 'file_name': file_name,
             'class_name': class_name,  # 类名
@@ -42,9 +44,15 @@ class Test(unittest2.TestCase):
     def _getData(self):
         # 获取当前用例class名 方法名 等
         get_test_info = self._getTestInfo()
+        ''' get_test_info
+        'class_name': 'TestUserLogin',
+        'method_name': 'test_login',
+        'now_data_model': 'apis.user.login',
+        'now_data_fun': 'apis.user.login.funName.test_login'
+        '''
         # 全局data 用例里可用
-        now_data_model = Utils.get_yaml(get_test_info['now_data_model'], self.project_path)
-        data = Utils.get_yaml(get_test_info['now_data_fun'], self.project_path)
+        now_data_model = self.yaml_apis.get(get_test_info['now_data_model'])
+        data = self.yaml_apis.get(get_test_info['now_data_fun'])
 
         # 模块公共属性 比如 url mode等
         if 'url' in now_data_model:
@@ -64,7 +72,7 @@ class Test(unittest2.TestCase):
                 _url = pub_url  # 给url添加域名
             else:
                 _url = data['url']  # 给url添加域名
-            data['url'] = Utils.get_yaml('project.config.domain', self.project_path) + _url
+            data['url'] = self.yaml_config.get('domain') + _url
 
             if 'mode' not in data:
                 data['mode'] = pub_mode
@@ -88,6 +96,7 @@ class Test(unittest2.TestCase):
     def tearDown(self):
         # 忽略掉io告警
         warnings.simplefilter("ignore", ResourceWarning)
+        Log.debug(self.result)
         # 保存到db
         if self.result:
             get_test_info = self._getTestInfo()
@@ -98,8 +107,10 @@ class Test(unittest2.TestCase):
                 'result': self.result  # 返回提交的data的json
             })
 
-            is_interrupt_continue = Config(self.project_path).get('interruptContinue')
-            if is_interrupt_continue == 'True':
+            if self.yaml_config.get('interruptContinue') is True:
+                # Log.debug('-----------------------')
+                # demo = self._db_complete.find('method_name',get_test_info['method_name'])
+                # Log.debug(demo)
                 # 保存到 结果队列
                 self._db_complete.inster({
                     'status': 1,

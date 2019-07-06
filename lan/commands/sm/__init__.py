@@ -3,7 +3,7 @@ from jinja2 import Template
 from lan.log import Log
 from lan.config import Config
 from lan.utils import Utils
-from lan.commands.tpl.sm_templates_index import get_html
+from lan.commands.sm.templates_index import get_html
 from lan.commands.pub import tpl
 
 
@@ -17,7 +17,7 @@ def _fun_config(path):
 
 
 def _fun_write_run(path):
-    tpl('/tpl/sm_run.py', path + '/run.py')
+    tpl('/sm/run.py', path + '/run.py')
 
 
 def _fun_write_index_html(path):
@@ -28,7 +28,7 @@ def _fun_write_index_html(path):
     Utils.write_file(path + '/index.html', template.render())
 
 
-def sm(args=None):
+def sm():
     # 创建Monitor目录
     path = os.getcwd() + '/Monitor'
 

@@ -2,40 +2,54 @@ import requests
 
 
 def _request(api='', method="get", data={}, headers={}, stream=True):
-    if method == 'get':
-        r = requests.get(api, params=data, headers=headers, stream=stream)
-    elif method == 'post':
-        r = requests.post(api, data=data, headers=headers, stream=stream)
-    elif method == 'put':
-        r = requests.put(api, data=data, headers=headers, stream=stream)
-    elif method == 'delete':
-        r = requests.delete(api, headers=headers, stream=stream)
-    else:
-        print('没有找到')
-
+    timeout = 5
+    can_request = False
     r_data = {
         'status_code': 0,
-        'status': '',
+        'status': 'error',
         'response': {},
         'time': 0,  # 时间
         'msg': ''  # 错误提示
     }
 
-    if r.status_code == 200:
-        if r.headers.get('Content-Type') == 'text/html':
-            # 获取html
-            r_data['response'] = r.text.encode(r.encoding).decode()
+    try:
+        if method == 'get':
+            r = requests.get(api, params=data, headers=headers, stream=stream, timeout=timeout)
+            can_request = True
+        elif method == 'post':
+            r = requests.post(api, data=data, headers=headers, stream=stream, timeout=timeout)
+            can_request = True
+        elif method == 'put':
+            r = requests.put(api, data=data, headers=headers, stream=stream, timeout=timeout)
+            can_request = True
+        elif method == 'delete':
+            r = requests.delete(api, headers=headers, stream=stream, timeout=timeout)
+            can_request = True
         else:
-            # 获取json
-            r_data['response'] = r.json()
+            r_data['msg'] = '没有找到'
+    except requests.ConnectTimeout:
+        r_data['msg'] = '超时！'
+    except requests.HTTPError:
+        r_data['msg'] = 'http状态码非200'
+    except Exception as e:
+        r_data['msg'] = '打不开 或者 未进行容错处理的情况'
 
-        r_data['status'] = 'success'
-    else:
-        r_data['status'] = 'error'
-        r_data['msg'] = r.text
+    if can_request is True:
+        if r.status_code == 200:
+            if r.headers.get('Content-Type') == 'text/html':
+                # 获取html
+                r_data['response'] = r.text.encode(r.encoding).decode()
+            else:
+                # 获取json
+                r_data['response'] = r.json()
 
-    r_data['time'] = r.elapsed.total_seconds()
-    r_data['status_code'] = r.status_code
+            r_data['status'] = 'success'
+        else:
+            r_data['status'] = 'error'
+            r_data['msg'] = r.text
+
+        r_data['time'] = r.elapsed.total_seconds()
+        r_data['status_code'] = r.status_code
 
     return r_data
 

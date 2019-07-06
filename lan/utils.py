@@ -1,4 +1,4 @@
-import os, warnings, yaml, datetime, time
+import os, datetime, time
 
 
 class Utils(object):
@@ -83,28 +83,6 @@ class Utils(object):
         """
         if os.path.exists(path) is True:
             os.remove(path)
-
-    @staticmethod
-    def get_yaml(name='', path='./'):
-        """
-        获取yaml
-        """
-        # 忽略掉yaml告警
-        warnings.simplefilter("ignore", DeprecationWarning)
-
-        # 每个项目下面有个config.yaml
-        config_path = path + '/config.yaml'
-        # yaml的读取
-        f = open(config_path, encoding='utf-8')
-        data = yaml.safe_load(f)
-        f.close()
-        if name != '':
-            try:
-                for item in name.split('.'):
-                    data = data[item]
-            except Exception as e:
-                data = ''
-        return data
 
 
 if __name__ == '__main__':

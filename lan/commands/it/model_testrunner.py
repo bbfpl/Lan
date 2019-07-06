@@ -1,17 +1,17 @@
 # coding=utf-8
 import time
 from unittest2 import suite, TextTestRunner
-from lan import FileDb, Config, Log, TestLoader, Utils
+from lan import FileDb, Log, TestLoader, Yaml, Utils
 from model.report import ReporeHtml
+
 
 # 定义 TestRunner 类
 class TestRunner(object):
     def __init__(self, path="../"):
-
         # 获取项目路径
         self.project_path = path
-        # 初始化配置ini
-        self._config = Config()
+        # yaml init
+        self.yaml_config = Yaml(self.project_path + '/config', 'config')
         # 所有结果
         self.db_all = FileDb(self.project_path + '/temp', 'all')
         # 已完成
@@ -24,7 +24,7 @@ class TestRunner(object):
         Log.debug("1-清除缓存")
         self.db_all.remove()
         # 中断后开始是否继续开始
-        if self._config.get("interruptContinue") == "False":
+        if self.yaml_config.get("interruptContinue") is False:
             self.db_complete.remove()
 
     # 获取未执行的用例
@@ -78,7 +78,7 @@ class TestRunner(object):
         method_names = self.__get_discover_cases(discover)
 
         # 读取config interruptContinue:中断后开始是否继续开始
-        if self._config.get('interruptContinue') == 'True':
+        if self.yaml_config.get("interruptContinue") is True:
             # 拿到方法名和结果队列比较
             discover = self.__get_case_incomplete(method_names)
         return discover, method_names
@@ -89,18 +89,20 @@ class TestRunner(object):
         runner = TextTestRunner(verbosity=1)
         result = runner.run(test_suites)
         self.all_result.append(result)
-        Log.debug("5-执行测试用例")
 
     # 第一步获取 result
     def __get_runner_result(self):
         Log.debug("3-执行runner")
         discover, method_names = self.__get_runner_discover()
 
+        Log.debug("5-执行测试用例")
         for i in discover:
             self.__runner_run(i)
 
-        self.db_all.inster_all(self.db_all.select())
-        self.db_complete.inster_all(self.db_complete.select())
+        # 在没有全局值的情况下不需要这两东西
+        # self.db_all.inster_all(self.db_all.select())
+        # self.db_complete.inster_all(self.db_complete.select())
+
         Log.debug("6-获取用例结果")
         return {
             'method_names': method_names,

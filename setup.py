@@ -18,7 +18,7 @@ setup(
     author_email='bobofpl@gmail.com',
     url='https://github.com/bbfpl/Lan',
     license='MIT',
-    packages=['lan', 'lan.commands', 'lan.commands.tpl'],
+    packages=['lan', 'lan.commands', 'lan.commands.it', 'lan.commands.sm', 'lan.commands.st'],
     entry_points=dict(console_scripts=['lan=lan.cli:main']),
     install_requires=[
         'requests',
@@ -26,7 +26,7 @@ setup(
         'logzero',
         'jinja2',
         'flask',
-        'locust',
+        # 'locust',
         'unittest2'
     ],
     zip_safe=False)

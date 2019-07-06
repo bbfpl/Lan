@@ -18,30 +18,25 @@ def _fun_config(path):
 
 
 def _fun_write_auth(path):
-    tpl('/tpl/st_auth.py', path + '/auth.py')
+    tpl('/st/auth.py', path + '/auth.py')
 
 
 def _fun_write_main(path):
-    tpl('/tpl/st_main.py', path + '/main.py')
+    tpl('/st/main.py', path + '/main.py')
 
 
 def _fun_write_run(path):
-    tpl('/tpl/st_run.py', path + '/run.py')
+    tpl('/st/run.py', path + '/run.py')
 
 
 def _fun_write_task(path):
-    tpl('/tpl/st_task.py', path + '/task.py')
+    tpl('/st/task.py', path + '/task.py')
 
 
-def st(args=None):
-    # if None is args:
-    #     Log.error('没有name参数')
-    #     return False
-
+def st(name="demo"):
     # 创建ST目录
     root_path = mkdir('ST')
-    st_path = mkdir(root_path + '/' + args.name)
-    # st_path = mkdir(root_path + '/demo')
+    st_path = mkdir(root_path + '/' + name)
 
     init_file(st_path)  # 创建空__init__.py
 

@@ -8,7 +8,7 @@ class TestUserLogin(Test):
     # 测试登录
     def test_login(self):
         Log.debug('开始测试 test_login')
-        self.result = Request.get('https://yg.api.dev.diyelf.com/v1/noauthority/video_play?id=201')
+        self.result = Request.get('http://139.196.192.35:39001/api/login')
         # Log.info(self.result)
         self.assertEqual(1, 1)
 

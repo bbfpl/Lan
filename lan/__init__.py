@@ -2,6 +2,7 @@ from .request import Request
 from .filedb import FileDb
 from .utils import Utils
 from .config import Config
+from .yaml import Yaml
 from .mail import Mail
 from .log import Log
 from .monitor import Monitor
@@ -18,6 +19,8 @@ __all__ = [
     'FileDb',
     # 配置文件类
     'Config',
+    # yaml类
+    'Yaml',
     # 日志类
     'Log',
     # 系统监测

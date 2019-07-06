@@ -1,8 +1,7 @@
-# *-*coding:utf-8*-*
+import os
 from jinja2 import Template
 # import webbrowser
-import os
-from lan import Utils,Mail
+from lan import Utils, Log, Mail, Yaml
 
 
 class ReporeHtml(object):
@@ -14,6 +13,22 @@ class ReporeHtml(object):
         self.case_data = case_data
         self.report_html_path = self.project_path + '/temp/report.html'
         Utils.remove_file(self.report_html_path)
+
+        # yaml init
+        _yaml_path = self.project_path + '/config'
+        self.yaml_config = Yaml(_yaml_path, 'config')
+        self.yaml_apis = Yaml(_yaml_path, 'apis')
+        self.yaml_mail = Yaml(_yaml_path, 'mail')
+        self.yaml_repore = Yaml(_yaml_path, 'repore')
+        self.yaml_response = Yaml(_yaml_path, 'response')
+
+        # 初始化邮箱
+        self._mail = Mail(
+            self.yaml_mail.get('host'),
+            self.yaml_mail.get('port'),
+            self.yaml_mail.get('user'),
+            self.yaml_mail.get('passwd')
+        )
 
     # 根据类型获取用例的数量和用例
     def __get_case_info(self, cases=[], stype='all'):
@@ -31,7 +46,7 @@ class ReporeHtml(object):
 
     # 获取切换菜单html
     def __get_cases_nav_html(self, data):
-        cases = Utils.get_yaml('project.config.repore.cases', self.project_path)
+        cases = self.yaml_repore.get("cases")
         new_data = []
         for k, v in cases.items():
             obj = {'text': v}
@@ -51,8 +66,8 @@ class ReporeHtml(object):
         return Template(Utils.open_file(os.path.dirname(__file__) + '/tpl/nav.html')).render(datas=new_data)
 
     # 获取所有用例内容列表
-    def __get_cases_content_html(self, data):
-        table = Utils.get_yaml('project.config.repore.table', self.project_path)
+    def get_cases_content_html(self, data):
+        table = self.yaml_repore.get('table')
         new_titles = []
         for k, v in table.items():
             obj = {
@@ -60,8 +75,9 @@ class ReporeHtml(object):
                 'text': v
             }
             new_titles.append(obj)
-        return Template(Utils.open_file(os.path.dirname(__file__) + '/tpl/content.html')).render(datas=data,
-                                                                                                 titles=new_titles)
+
+        content = Utils.open_file(os.path.dirname(__file__) + '/tpl/content.html')
+        return Template(content).render(datas=data, titles=new_titles)
 
     # 获取统计图
     def __get_cases_chart_html(self, data):
@@ -69,7 +85,8 @@ class ReporeHtml(object):
 
     # 获取 输出字段数据 模板可使用的字段
     def get_output_field_data(self):
-        title = Utils.get_yaml('project.config.repore.title', self.project_path)
+        title = self.yaml_repore.get("title")
+
         # 所有
         all_case = self.__get_case_info(self.case_data, 'all')
         # 成功
@@ -87,19 +104,46 @@ class ReporeHtml(object):
             'errors_case_sum': errors['len'],  # int
             'skipped_case_sum': skipped['len'],  # int
         }
-        data['chart_html'] = self.__get_cases_chart_html(data)  # html
-        data['nav_html'] = self.__get_cases_nav_html(data)  # html
+        # html
+        data['chart_html'] = self.__get_cases_chart_html(data)
+        # html
+        data['nav_html'] = self.__get_cases_nav_html(data)
         case_info = [
             {'name': 'all_cases', 'list': all_case['cases']},
             {'name': 'success_cases', 'list': success['cases']},
             {'name': 'errors_cases', 'list': errors['cases']},
             {'name': 'skipped_cases', 'list': skipped['cases']}
         ]
-        data['content_html'] = self.__get_cases_content_html(case_info)  # html
+        content_html = self.get_cases_content_html(case_info)
+        data['content_html'] = content_html
+
         return data
+
+    def __send_mail(self, data):
+        receivers = self.yaml_repore.get('receivers')
+        subject = self.yaml_repore.get('title')
+        host = self.yaml_repore.get('server.host')
+        port = self.yaml_repore.get('server.port')
+
+        # 获取mail_html路径
+        html_path = os.path.dirname(__file__) + '/tpl/mail_html.txt'
+        # 基础模板文件
+        html_code = Utils.open_file(html_path)
+        # 邮件发送内容
+        content = Template(html_code).render({
+            "title": subject,
+            "all_case_sum": data['all_case_sum'],
+            "success_case_sum": data['success_case_sum'],
+            "errors_case_sum": data['errors_case_sum'],
+            "skipped_case_sum": data['skipped_case_sum'],
+            "report_path": str(host) + ':' + str(port) + '/report.html'
+        })
+        # 发送邮件
+        self._mail.send(receivers, subject, content)
 
     def build(self):
         get_data = self.get_output_field_data()
+
         # 获取template路径
         code_path = os.path.dirname(__file__) + '/tpl/template.html'
         # 基础模板文件
@@ -108,15 +152,8 @@ class ReporeHtml(object):
         # 写入内容
         Utils.write_file(self.report_html_path, html)
         # 发送邮件
-        # if Config.get_config('reportSendMail') == 'True':
-        #     SendMail().run({
-        #         "all_case_sum": get_data['all_case_sum'],
-        #         "success_case_sum": get_data['success_case_sum'],
-        #         "errors_case_sum": get_data['errors_case_sum'],
-        #         "skipped_case_sum": get_data['skipped_case_sum'],
-        #         "report_path": 'http://' + Config.get_config('serverIp') + ':' + Config.get_config(
-        #             'serverPort') + '/report_' + g_get('main') + '.html'
-        #     })
+        if self.yaml_config.get('reportSendMail') is True:
+            self.__send_mail(get_data)
 
 
 if __name__ == '__main__':
@@ -137,5 +174,6 @@ if __name__ == '__main__':
              'msg': ''}]
 
     ReporeHtml(0, 0, demo).build()
+
     # 使用浏览器打开html
     # webbrowser.open("test_demo.html")
