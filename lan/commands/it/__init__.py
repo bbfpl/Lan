@@ -2,6 +2,7 @@ import os
 from jinja2 import Template
 from lan.log import Log
 from lan.utils import Utils
+
 from lan.commands.pub import mkdir, tpl, init_file
 
 from lan.commands.it.config_apis_yaml import get_config_apis_tpl
@@ -16,10 +17,12 @@ from lan.commands.it.model_tpl_nav import get_nav_tpl
 from lan.commands.it.model_tpl_template import get_template_tpl
 from lan.commands.it.model_tpl_mail_html import get_maile_html_tpl
 
+from lan.commands.make import Make
+
 
 # config.yaml
 def _fun_config_yaml(path):
-    Log.debug('创建 apis.yaml文件')
+    Log.debug("创建 apis.yaml文件")
     Utils.write_file(path + '/apis.yaml', Template(get_config_apis_tpl()).render())
 
     Log.debug('创建 config.yaml文件')
@@ -120,7 +123,8 @@ def it(name="demo"):
     _fun_write_model_tpl_mail_html(path_model_tpl)
 
     # 创建login_st.py
-    tpl('/it/apis_login_st.py', path_apis_user + '/login_st.py')
+    # tpl('/it/apis_login_st.py', path_apis_user + '/login_st.py')
+    Make(path).start()
 
 
 if __name__ == '__main__':
