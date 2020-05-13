@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+import os
 from lan.config import Config
 from lan.utils import Utils
 from lan.commands.pub import mkdir, tpl, init_file
@@ -35,20 +36,20 @@ def _fun_write_task(path):
 
 def st(name="demo"):
     # 创建ST目录
-    root_path = mkdir('ST')
-    st_path = mkdir(root_path + '/' + name)
+    root_path = mkdir(os.getcwd())
+    path = mkdir(root_path + '/' + 'st_'+name)
 
-    init_file(st_path)  # 创建空__init__.py
+    init_file(path)  # 创建空__init__.py
 
     # 创建ST-log目录
-    Utils.mkdir(st_path + '/log')
+    Utils.mkdir(path + '/log')
     # 创建配置文件
-    _fun_config(st_path)
+    _fun_config(path)
 
-    _fun_write_auth(st_path)
-    _fun_write_main(st_path)
-    _fun_write_run(st_path)
-    _fun_write_task(st_path)
+    _fun_write_auth(path)
+    _fun_write_main(path)
+    _fun_write_run(path)
+    _fun_write_task(path)
 
 
 if __name__ == '__main__':

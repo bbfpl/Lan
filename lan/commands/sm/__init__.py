@@ -4,7 +4,7 @@ from lan.log import Log
 from lan.config import Config
 from lan.utils import Utils
 from lan.commands.sm.templates_index import get_html
-from lan.commands.pub import tpl
+from lan.commands.pub import mkdir, tpl
 
 
 def _fun_config(path):
@@ -28,12 +28,12 @@ def _fun_write_index_html(path):
     Utils.write_file(path + '/index.html', template.render())
 
 
-def sm():
+def sm(name="demo"):
     # 创建Monitor目录
-    path = os.getcwd() + '/Monitor'
+    root_path = mkdir(os.getcwd())
+    path = mkdir(root_path + '/' + 'monitor_'+name)
 
-    Utils.mkdir(path)
-    Log.debug('创建目录:Monitor')
+    Log.debug('创建目录:'+'monitor_'+name)
     # 创建配置文件
     _fun_config(path)
 

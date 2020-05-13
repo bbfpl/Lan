@@ -1,10 +1,12 @@
 # Lan(懒)是一套测试框架 .
+
 ### 主要功能
-压测(Stress Testing) 简称 st
-服务器监控(Server monitoring) 简称 sm
 接口测试(Interface Testing) 简称 it
+服务器监控(Server monitoring) 简称 sm
+
 ### 安装
-第一种
+第一种 
+https://pypi.org/project/lan.io/
 ```python
 pip install lan
 ```
@@ -23,26 +25,27 @@ lan
 ```
 后显示
 ```
-usage: lan [-h] {it,st,monitor} ...
-Lan(懒)是一套Python测试套件
+usage: lan [-h] {create,make,run,server} ...
+Lan(懒)是一套Python测试套件脚手架
 positional arguments:
-  {it,st,monitor}
-    it             - 接口测试
-    st             - 压力测试
-    sm             - 服务器监控
+  {create,make,run,server}
+    create              - 创建项目 项目类型(it st sm)/项目名称
+    make                - 用例生成 根据config.yaml文件生成用例文件
+    run                 - 运行项目 结束退出
+    server              - 运行项目 后台模式
 ```
 3、选择需要创建的类型
 创建接口测试(项目名称必填)：
 ```
-lan it projectName
+lan create it/projectName
 ```
-创建压力测试：
+创建压测(项目名称必填)：
 ```
-lan st
+lan create st/projectName
 ```
 创建服务器监控(项目名称必填)：
 ```
-lan sm projectName
+lan create sm/projectName
 ```
 3、运行
 ```shell

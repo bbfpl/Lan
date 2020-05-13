@@ -15,7 +15,7 @@ def create(args=None):
     elif name[0] == "st":
         st(name[1])
     elif name[0] == "sm":
-        sm()
+        sm(name[1])
     else:
         Log.debug("没有相关类型 请输入it/project st/project sm/project")
 

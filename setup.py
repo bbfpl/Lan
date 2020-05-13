@@ -1,10 +1,11 @@
 from setuptools import setup
 
 setup(
-    name="lan",
-    version='0.0.1',
+    name="lan.io",
+    version='0.0.2',
     description="Lan(懒)是一套测试框架 .",
-    long_description="Lan(懒)是一套测试框架 .",
+    long_description=open("README.md", 'r', encoding="utf-8").read(),
+    long_description_content_type="text/markdown",
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -35,7 +36,8 @@ setup(
         'logzero',
         'jinja2',
         'flask',
-        'locust',
-        'unittest2'
+        # 'locust',
+        'unittest2',
+        'PyYAML'
     ],
     zip_safe=False)

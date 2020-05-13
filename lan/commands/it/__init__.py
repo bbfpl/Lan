@@ -75,9 +75,9 @@ def _fun_write_model_tpl_mail_html(path):
 
 def it(name="demo"):
     # 创建It目录
-    root_path = mkdir(os.getcwd() + '/IT')
+    root_path = mkdir(os.getcwd())
 
-    path = mkdir(root_path + '/' + name)
+    path = mkdir(root_path + '/' + 'it_'+name)
 
     path_model = path + '/model'
 
