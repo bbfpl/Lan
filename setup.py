@@ -36,7 +36,7 @@ setup(
         'logzero',
         'jinja2',
         'flask',
-        # 'locust',
+        'locust',
         'unittest2',
         'PyYAML'
     ],

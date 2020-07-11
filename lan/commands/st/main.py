@@ -1,6 +1,6 @@
-# 统一引用lan里的HttpLocust
+# 统一引用lan里的UserLocust
 #  locust -f ./locust11.py -P 8090
-from locust import HttpLocust
+from locust import UserLocust
 
 from lan import Config
 # 引用task.py里的Tasks类 启动和任务单独分开写
@@ -11,7 +11,7 @@ cf = Config()
 
 
 # 运行 locust -f run.py 默认端口为8089
-class Main(HttpLocust):
+class Main(UserLocust):
     # 获取任务
     task_set = Tasks
     # 压测时间
